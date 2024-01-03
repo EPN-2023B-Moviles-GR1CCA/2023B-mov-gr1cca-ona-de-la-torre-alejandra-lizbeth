@@ -215,6 +215,8 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
             )
         }
 
+        txtCodigoUnico!!.isEditable = false
+
     }
 
     fun volverCocineroInterface(){

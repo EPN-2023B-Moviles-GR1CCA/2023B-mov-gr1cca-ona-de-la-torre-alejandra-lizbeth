@@ -2,7 +2,6 @@ package GUI
 
 import Model.Cocinero
 import Model.Comida
-import Repository.CocineroRepository
 import Repository.ComidaRepository
 import java.awt.Color
 import java.awt.Font
@@ -11,12 +10,14 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.swing.*
 
-class CreacionComidaInterface(chef: Cocinero?): JFrame() {
+class CreacionComidaInterface(chef: Cocinero): JFrame() {
 
-    val comidaRepository: ComidaRepository = ComidaRepository()
+    val comidaRepository: ComidaRepository = ComidaRepository("src/data/comidas.json")
     val chef = chef
     var mainPanel: JPanel?= null
     var txtIdentificador: JTextField?= null
@@ -194,12 +195,14 @@ class CreacionComidaInterface(chef: Cocinero?): JFrame() {
         btnVolver.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent) {
                 isVisible = false
-                ComidaInterface(chef!!.codigoUnico).isVisible = true
+                ComidaInterface(chef.codigoUnico).isVisible = true
             }
         })
     }
 
     fun agregarComida(){
+
+        val comidas = comidaRepository.getComidasByIdentificadorCocinero(chef.codigoUnico)
         var btnAgregarCocinero = JButton("Guardar")
         mainPanel!!.add(btnAgregarCocinero)
         mainPanel!!.setLayout(null)
@@ -212,26 +215,78 @@ class CreacionComidaInterface(chef: Cocinero?): JFrame() {
 
                 val identificador: String = txtIdentificador!!.getText()
                 val nombre: String = txtNombre!!.getText()
-                val fechaCreacion: Date = Date(txtFechaCreacion!!.getText())
+                val fechaCreacionString: String = txtFechaCreacion!!.getText()
+                val fechaCreacion: Date = try {
+                    SimpleDateFormat("yyyy-MM-dd").parse(fechaCreacionString)
+                } catch (ex: ParseException) {
+                    // Manejo de error: la fecha no tiene el formato esperado
+                    JOptionPane.showMessageDialog(
+                        this@CreacionComidaInterface, "Formato de fecha incorrecto. Se espera este formato: yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
                 val esPlatoDia: Boolean = txtEsPlatoDelDia!!.getText().equals("Si")
                 val tipoCocina: String = txtTipoCocina!!.getText()
-                val cantidadProductos: Int = txtCantidadProductos!!.getText().toInt()
-                val precio: Double = txtPrecio!!.getText().toDouble()
+                val cantidadProductos: Int = try {
+                    txtCantidadProductos!!.getText().toInt()
+                } catch (ex: NumberFormatException) {
+                    // Manejo de error: la edad no es un número válido
+                    JOptionPane.showMessageDialog(
+                        this@CreacionComidaInterface, "La cantidad de productos debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
 
-                val newFood: Comida = Comida(
-                    identificador, nombre, fechaCreacion, esPlatoDia, tipoCocina, cantidadProductos, precio, chef
-                )
+                val precio: Double = try {
+                    txtPrecio!!.getText().toDouble()
+                } catch (ex: NumberFormatException) {
+                    // Manejo de error: el precio no es un número válido
+                    JOptionPane.showMessageDialog(
+                        this@CreacionComidaInterface, "El precio debe ser un número válido.Ej: 3.50", "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
+                val existeIdentificador = comidas.any { comida -> comida.identificador == identificador }
 
-                println(newFood.cantidadProductos)
-                println(newFood.fechaCreacion)
-                println(newFood.identificador)
-                println(newFood.nombre)
-                println(newFood.esPlatoDelDia)
+                if (existeIdentificador){
+                    JOptionPane.showMessageDialog(
+                        this@CreacionComidaInterface, "El identificador de la comida ya existe, ingrese otro",
+                        "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                }else {
 
-                limpiarCampos()
+                    if (identificador.isEmpty() || nombre.isEmpty() || cantidadProductos <= 0 || precio <= 0 || tipoCocina.isEmpty()) {
+                        JOptionPane.showMessageDialog(
+                            this@CreacionComidaInterface,
+                            "Todos los campos deben ser completados, el precio y la cantidad de productos debe ser mayor a 0",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                        )
+                    } else {
+                        val newFood: Comida = Comida(
+                            identificador,
+                            nombre,
+                            fechaCreacion,
+                            esPlatoDia,
+                            tipoCocina,
+                            cantidadProductos,
+                            precio,
+                            chef.codigoUnico
+                        )
 
-//                isVisible = false
-//                CocineroInterface().isVisible = true
+                        comidaRepository.create(newFood)
+
+                        limpiarCampos()
+
+                        JOptionPane.showMessageDialog(
+                            this@CreacionComidaInterface, "Se ha creado una nueva comida exitosamente",
+                            "Success", JOptionPane.INFORMATION_MESSAGE
+                        )
+
+                        isVisible = false
+                        ComidaInterface(chef.codigoUnico).isVisible = true
+                    }
+                }
             }
         })
     }

@@ -10,14 +10,16 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.swing.*
 
 class ActualizarComidaInterface(chefParam: Cocinero?, identificador: String): JFrame() {
 
-    val comidaRepository: ComidaRepository = ComidaRepository()
+    val comidaRepository: ComidaRepository = ComidaRepository("src/data/comidas.json")
     val chef = chefParam
-    val identificador = identificador
+    val identificadorComidaActual = identificador
     var mainPanel: JPanel?= null
     var txtIdentificador: JTextField?= null
     var txtNombre: JTextField?= null
@@ -184,10 +186,15 @@ class ActualizarComidaInterface(chefParam: Cocinero?, identificador: String): JF
     }
 
     fun llenarCampos(){
-        val comida: Comida ?= comidaRepository.getComidaByIdentificador(identificador)
-        txtIdentificador!!.setText(identificador)
+        val comida: Comida ?= comidaRepository.getComidaByIdentificadorAndCodigoChef(identificadorComidaActual, chef!!.codigoUnico)
+        fun getFechaCreacion(fecha: Date): String {
+            val formato = SimpleDateFormat("yyyy-MM-dd")
+            formato.timeZone = TimeZone.getTimeZone("UTC") // Establece la zona horaria a UTC
+            return formato.format(fecha)
+        }
+        txtIdentificador!!.setText(identificadorComidaActual)
         txtNombre!!.setText(comida!!.nombre)
-        txtFechaCreacion!!.setText(comida.fechaCreacion.toString())
+        txtFechaCreacion!!.setText(getFechaCreacion(comida.fechaCreacion))
         txtEsPlatoDelDia!!.setText(
             if(comida.esPlatoDelDia) "Si" else "No"
         )
@@ -195,7 +202,9 @@ class ActualizarComidaInterface(chefParam: Cocinero?, identificador: String): JF
         txtCantidadProductos!!.setText(comida.cantidadProductos.toString())
         txtPrecio!!.setText(comida.precio.toString())
 
+        txtIdentificador!!.isEditable = false
     }
+
     fun volverComidaInterface(){
         var btnVolver = JButton()
         mainPanel!!.add(btnVolver)
@@ -214,6 +223,7 @@ class ActualizarComidaInterface(chefParam: Cocinero?, identificador: String): JF
     }
 
     fun guardarActualizacion(){
+
         var btnAgregarCocinero = JButton("Guardar")
         mainPanel!!.add(btnAgregarCocinero)
         mainPanel!!.setLayout(null)
@@ -226,26 +236,78 @@ class ActualizarComidaInterface(chefParam: Cocinero?, identificador: String): JF
 
                 val identificador: String = txtIdentificador!!.getText()
                 val nombre: String = txtNombre!!.getText()
-                val fechaCreacion: Date = Date(txtFechaCreacion!!.getText())
+                val fechaCreacionString: String = txtFechaCreacion!!.getText()
+                val fechaCreacion: Date = try {
+                    SimpleDateFormat("yyyy-MM-dd").parse(fechaCreacionString)
+                } catch (ex: ParseException) {
+                    // Manejo de error: la fecha no tiene el formato esperado
+                    JOptionPane.showMessageDialog(
+                        this@ActualizarComidaInterface,
+                        "Formato de fecha incorrecto. Se espera este formato: yyyy-MM-dd",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
                 val esPlatoDia: Boolean = txtEsPlatoDelDia!!.getText().equals("Si")
                 val tipoCocina: String = txtTipoCocina!!.getText()
-                val cantidadProductos: Int = txtCantidadProductos!!.getText().toInt()
-                val precio: Double = txtPrecio!!.getText().toDouble()
+                val cantidadProductos: Int = try {
+                    txtCantidadProductos!!.getText().toInt()
+                } catch (ex: NumberFormatException) {
+                    // Manejo de error: la edad no es un número válido
+                    JOptionPane.showMessageDialog(
+                        this@ActualizarComidaInterface,
+                        "La cantidad de productos debe ser un número válido",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
 
-                val newFood: Comida = Comida(
-                    identificador, nombre, fechaCreacion, esPlatoDia, tipoCocina, cantidadProductos, precio, chef
-                )
+                val precio: Double = try {
+                    txtPrecio!!.getText().toDouble()
+                } catch (ex: NumberFormatException) {
+                    // Manejo de error: el precio no es un número válido
+                    JOptionPane.showMessageDialog(
+                        this@ActualizarComidaInterface,
+                        "El precio debe ser un número válido.Ej: 3.50",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
 
-                println(newFood.cantidadProductos)
-                println(newFood.fechaCreacion)
-                println(newFood.identificador)
-                println(newFood.nombre)
-                println(newFood.esPlatoDelDia)
+                if (identificador.isEmpty() || nombre.isEmpty() || cantidadProductos <= 0 || precio <= 0 || tipoCocina.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                        this@ActualizarComidaInterface,
+                        "Todos los campos deben ser completados, el precio y la cantidad de productos debe ser mayor a 0",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    )
+                } else {
+                    val newFood: Comida = Comida(
+                        identificador,
+                        nombre,
+                        fechaCreacion,
+                        esPlatoDia,
+                        tipoCocina,
+                        cantidadProductos,
+                        precio,
+                        chef!!.codigoUnico
+                    )
 
-                limpiarCampos()
+                    comidaRepository.updateComidaByIdentificadorAndCodigoChef(identificadorComidaActual, newFood, chef.codigoUnico)
 
-//                isVisible = false
-//                CocineroInterface().isVisible = true
+                    limpiarCampos()
+
+                    JOptionPane.showMessageDialog(
+                        this@ActualizarComidaInterface, "Se han actualizado los datos correctamente",
+                        "Success", JOptionPane.INFORMATION_MESSAGE
+                    )
+
+                    isVisible = false
+                    ComidaInterface(chef.codigoUnico).isVisible = true
+                }
             }
         })
     }

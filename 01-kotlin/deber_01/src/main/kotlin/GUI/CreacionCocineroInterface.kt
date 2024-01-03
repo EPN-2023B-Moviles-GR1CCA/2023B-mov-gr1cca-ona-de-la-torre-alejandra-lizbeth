@@ -16,7 +16,7 @@ import javax.swing.*
 
 class CreacionCocineroInterface(): JFrame() {
     val cocineroRepository: CocineroRepository = CocineroRepository("src/data/cocineros.json")
-//    val comidaRepository: ComidaRepository = ComidaRepository()
+
     var mainPanel: JPanel ?= null
     var txtCodigoUnico: JTextField ?= null
     var txtNombres: JTextField ?= null
@@ -212,6 +212,7 @@ class CreacionCocineroInterface(): JFrame() {
 
     fun agregarCocinero(){
         var btnAgregarCocinero = JButton("Guardar")
+        val cocineros = cocineroRepository.getChefs()
         mainPanel!!.add(btnAgregarCocinero)
         mainPanel!!.setLayout(null)
         btnAgregarCocinero.setBounds(325,370,150,25)
@@ -229,7 +230,10 @@ class CreacionCocineroInterface(): JFrame() {
                 } catch (ex: NumberFormatException) {
                     // Manejo de error: la edad no es un número válido
                     JOptionPane.showMessageDialog(
-                        this@CreacionCocineroInterface, "La edad debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE
+                        this@CreacionCocineroInterface,
+                        "La edad debe ser un número válido",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
                     )
                     return
                 }
@@ -239,7 +243,10 @@ class CreacionCocineroInterface(): JFrame() {
                 } catch (ex: ParseException) {
                     // Manejo de error: la fecha no tiene el formato esperado
                     JOptionPane.showMessageDialog(
-                        this@CreacionCocineroInterface, "Formato de fecha incorrecto. Se espera este formato: yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE
+                        this@CreacionCocineroInterface,
+                        "Formato de fecha incorrecto. Se espera este formato: yyyy-MM-dd",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
                     )
                     return
                 }
@@ -249,30 +256,49 @@ class CreacionCocineroInterface(): JFrame() {
                 } catch (ex: NumberFormatException) {
                     // Manejo de error: el salario no es un número válido
                     JOptionPane.showMessageDialog(
-                        this@CreacionCocineroInterface, "El salario debe ser un número válido.Ej: 200.00", "Error", JOptionPane.ERROR_MESSAGE
+                        this@CreacionCocineroInterface,
+                        "El salario debe ser un número válido.Ej: 200.00",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
                     )
                     return
                 }
 
                 val isMainChef: Boolean = txtEsChefPrincipal!!.getText().equals("Si")
 //
+                val existeIdentificador = cocineros.any { cocinero -> cocinero.codigoUnico == codigoUnico }
 
-                if (codigoUnico.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() || edad <= 17 || salario <= 0) {
+                if (existeIdentificador) {
                     JOptionPane.showMessageDialog(
-                        this@CreacionCocineroInterface, "Todos los campos deben ser completados, el salario debe ser mayor a 0 y la edad debe ser mayor o igual a 18 años",
+                        this@CreacionCocineroInterface, "El identificador del cocinero ya existe, ingrese otro",
                         "Error", JOptionPane.ERROR_MESSAGE
                     )
-                }else{
-                    val newChef: Cocinero = Cocinero(
-                        codigoUnico, nombres, apellidos, edad, fechaContratacion, salario, isMainChef
-                    )
+                } else {
 
-                    cocineroRepository.create(newChef)
+                    if (codigoUnico.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() || edad <= 17 || salario <= 0) {
+                        JOptionPane.showMessageDialog(
+                            this@CreacionCocineroInterface,
+                            "Todos los campos deben ser completados, el salario debe ser mayor a 0 y la edad debe ser mayor o igual a 18 años",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                        )
+                    } else {
+                        val newChef: Cocinero = Cocinero(
+                            codigoUnico, nombres, apellidos, edad, fechaContratacion, salario, isMainChef
+                        )
 
-                    limpiarCampos()
+                        cocineroRepository.create(newChef)
 
-                    isVisible = false
-                    CocineroInterface().isVisible = true
+                        limpiarCampos()
+
+                        JOptionPane.showMessageDialog(
+                            this@CreacionCocineroInterface, "Se ha creado un nuevo cocinero exitosamente",
+                            "Success", JOptionPane.INFORMATION_MESSAGE
+                        )
+
+                        isVisible = false
+                        CocineroInterface().isVisible = true
+                    }
                 }
             }
         })

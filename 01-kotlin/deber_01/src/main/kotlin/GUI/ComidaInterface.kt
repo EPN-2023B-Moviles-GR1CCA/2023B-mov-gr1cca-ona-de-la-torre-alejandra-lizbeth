@@ -2,11 +2,14 @@ package GUI
 
 import Model.Cocinero
 import Repository.CocineroRepository
+import Repository.ComidaRepository
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -16,8 +19,10 @@ import javax.swing.table.TableCellRenderer
 class ComidaInterface(numeroUnico: String): JFrame() {
 
     var mainPanel: JPanel?= null
-    val cocineroRepository: CocineroRepository = CocineroRepository("src/data")
+    val comidaRepository: ComidaRepository = ComidaRepository("src/data/comidas.json")
+    val cocineroRepository: CocineroRepository = CocineroRepository("src/data/cocineros.json")
     val chef: Cocinero ?= cocineroRepository.getChefByCodigoUnico(numeroUnico)
+
     init {
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         title = "Aplicación cocinero comidas"
@@ -52,11 +57,10 @@ class ComidaInterface(numeroUnico: String): JFrame() {
     }
 
     fun agregarEtiquetas(){
-//        var lblTitle = JLabel("Comidas hechas por ${chef!!.nombre} ${chef.apellido}")
-        var lblTitle = JLabel("Comidas hechas por Alejandra Oña")
+        var lblTitle = JLabel("Comidas hechas por ${chef!!.nombre} ${chef.apellido}")
         mainPanel!!.add(lblTitle)
         mainPanel!!.setLayout(null)
-        lblTitle.setBounds(225,10,450,40)
+        lblTitle.setBounds(75,10,750,40)
         lblTitle.horizontalAlignment = 0 //centrado horizontalmente
         lblTitle.foreground = Color.white
         lblTitle.font = Font("Times New Roman", Font.BOLD, 25)
@@ -89,14 +93,15 @@ class ComidaInterface(numeroUnico: String): JFrame() {
 
         btnAgregarComida.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent) {
-                // Lógica para ocultar esta ventana y mostrar creacion cocineros
-                isVisible = false
-                if(chef==null){
+
+                if(chef!=null){
+                    isVisible = false
                     CreacionComidaInterface(chef).isVisible = true
                 }else{
-                    println("No se puede agregar un nuevo plato, no se han obtenido los datos del chef")
-                    isVisible = false
-                    CocineroInterface().isVisible = true
+                    JOptionPane.showMessageDialog(this@ComidaInterface,
+                        "No se puede agregar un nuevo plato, no se han obtenido los datos del chef",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE)
                 }
             }
         })
@@ -104,13 +109,27 @@ class ComidaInterface(numeroUnico: String): JFrame() {
 
     private fun agregarTabla() {
         val columnNames = arrayOf("Identificador","Nombre", "Fecha de creación", "Es plato del día", "Tipo de cocina", "Cantidad de productos", "Precio", "Opciones")
-        val data = arrayOf(
-            arrayOf("PL1", "Encebollado", "12/12/2023", true, "Ecuatoriana", 7, 3.50, true),
-            arrayOf("PL2", "Pasta", "12/12/2023", false, "Ecuatoriana", 5, 4.00, true),
-            arrayOf("PL3", "Crema de tomate", "12/12/2023", true, "Ecuatoriana", 8, 3.25, true),
-            arrayOf("PL4", "Arroz relleno", "12/12/2023", false, "Ecuatoriana", 7, 2.50, true),
-            arrayOf("PL5", "Pato a la naranja", "12/12/2023", true, "Ecuatoriana", 5, 3.78, true)
-        )
+        val comidas = comidaRepository.getComidasByIdentificadorCocinero(chef!!.codigoUnico)
+
+        fun getFechaCreacion(fecha: Date): String {
+            val formato = SimpleDateFormat("yyyy-MM-dd")
+            formato.timeZone = TimeZone.getTimeZone("UTC") // Establece la zona horaria a UTC
+            return formato.format(fecha)
+        }
+
+        // Convierte la lista de cocineros a un arreglo de arreglos
+        val data = comidas.map {
+            arrayOf(
+                it.identificador,
+                "${it.nombre}",
+                getFechaCreacion(it.fechaCreacion),
+                if(it.esPlatoDelDia) "Si" else "No",
+                it.tipoCocina,
+                it.cantidadProductos,
+                it.precio,
+                true
+            )
+        }.toTypedArray()
 
         val model = DefaultTableModel(data, columnNames)
         val table = JTable(model)
@@ -132,7 +151,7 @@ class ComidaInterface(numeroUnico: String): JFrame() {
 
         val opcionesColumn = table.getColumn("Opciones")
         opcionesColumn.cellRenderer = ButtonRenderer()
-        opcionesColumn.cellEditor = ButtonEditor(table, this, chef)
+        opcionesColumn.cellEditor = ButtonEditor(table, this, chef, comidaRepository)
 
         // Add the table to a scroll pane, then add the scroll pane to the frame
         val scrollPane = JScrollPane(table)
@@ -166,7 +185,7 @@ class ComidaInterface(numeroUnico: String): JFrame() {
         }
     }
 
-    class ButtonEditor(private val table: JTable, private val window: JFrame, private val chef: Cocinero?) : AbstractCellEditor(), TableCellEditor,
+    class ButtonEditor(private val table: JTable, private val window: JFrame, private val chef: Cocinero?, private val comidaRepository: ComidaRepository) : AbstractCellEditor(), TableCellEditor,
         ActionListener {
         private val panel = JPanel(FlowLayout(FlowLayout.LEFT))
         private val editButton = JButton()
@@ -208,12 +227,24 @@ class ComidaInterface(numeroUnico: String): JFrame() {
                 // Get the data of the selected row
                 val identificador = table.getValueAt(selectedRow, 0) as String
 
-                deleteButton.addActionListener(object : ActionListener {
-                    override fun actionPerformed(e: ActionEvent) {
-                        window.isVisible = false
-                        EliminarComidaInterface(identificador).isVisible = true
-                    }
-                })
+                fun showDeleteConfirmationDialog(): Boolean {
+                    val confirmation = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Estás seguro de que deseas eliminar esta comida?",
+                        "Confirmar Eliminación",
+                        JOptionPane.YES_NO_OPTION
+                    )
+
+                    return confirmation == JOptionPane.YES_OPTION
+                }
+
+                val confirmacion = showDeleteConfirmationDialog()
+
+                if (confirmacion) {
+                    comidaRepository.deleteComidaByIdentificadorAndCodigoChef(identificador, chef!!.codigoUnico)
+                    // Actualiza la tabla después de la eliminación
+                    (table.model as DefaultTableModel).removeRow(selectedRow)
+                }
             }
         }
     }

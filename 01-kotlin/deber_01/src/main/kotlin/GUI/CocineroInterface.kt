@@ -245,7 +245,7 @@ class CocineroInterface(): JFrame() {
                 // Get the data of the selected row
                 val numeroUnico = table.getValueAt(selectedRow, 0) as String
 
-                println(numeroUnico)
+//                println(numeroUnico)
                 viewButton.addActionListener(object : ActionListener {
                     override fun actionPerformed(e: ActionEvent) {
                         window.isVisible = false
