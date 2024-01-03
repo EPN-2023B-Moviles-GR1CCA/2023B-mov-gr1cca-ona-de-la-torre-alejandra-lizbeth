@@ -2,7 +2,6 @@ package GUI
 
 import Model.Cocinero
 import Repository.CocineroRepository
-import Repository.ComidaRepository
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
@@ -10,12 +9,14 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.swing.*
 
 class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
-    val cocineroRepository: CocineroRepository = CocineroRepository("src/data")
-    val comidaRepository: ComidaRepository = ComidaRepository()
+    val cocineroRepository: CocineroRepository = CocineroRepository("src/data/cocineros.json")
+//    val comidaRepository: ComidaRepository = ComidaRepository()
     var mainPanel: JPanel ?= null
     var txtCodigoUnico: JTextField ?= null
     var txtNombres: JTextField ?= null
@@ -45,7 +46,7 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
         volverCocineroInterface()
         agregarEtiquetas()
         agregarCampoTexto()
-        agregarCocinero()
+        actualizarDatosCocinero()
     }
 
     fun agregarPanel(){
@@ -61,7 +62,7 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
 
     fun agregarEtiquetas(){
         var lblTitle = JLabel("Bienvenido")
-        var lblTitle2 = JLabel("Ingresa los datos del cocinero")
+        var lblTitle2 = JLabel("Actualiza los datos del cocinero")
         var lblDatosPersonales = JLabel("Datos personales")
         var lblCodigoUnico = JLabel("Código único: ")
         var lblNombres = JLabel("Nombres: ")
@@ -108,7 +109,7 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
         lblNombres.foreground = Color.white
         lblNombres.font = Font("Times New Roman", Font.BOLD, 14)
 
-        lblApellidos.setBounds(340,170,70,30)
+        lblApellidos.setBounds(390,170,70,30)
         lblApellidos.horizontalAlignment = 2
         lblApellidos.foreground = Color.white
         lblApellidos.font = Font("Times New Roman", Font.BOLD, 14)
@@ -161,17 +162,17 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
         txtCodigoUnico!!.horizontalAlignment = 0
         txtCodigoUnico!!.font = Font("Times New Roman", Font.PLAIN, 13)
 
-        txtNombres!!.setBounds(130,170,200,20)
+        txtNombres!!.setBounds(160,170,200,20)
         txtNombres!!.foreground = Color.BLACK
         txtNombres!!.horizontalAlignment = 0
         txtNombres!!.font = Font("Times New Roman", Font.PLAIN, 13)
 
-        txtApellidos!!.setBounds(430,170,210,20)
+        txtApellidos!!.setBounds(460,170,210,20)
         txtApellidos!!.foreground = Color.BLACK
         txtApellidos!!.horizontalAlignment = 0
         txtApellidos!!.font = Font("Times New Roman", Font.PLAIN, 13)
 
-        txtEdad!!.setBounds(130,200,50,20)
+        txtEdad!!.setBounds(160,200,50,20)
         txtEdad!!.foreground = Color.BLACK
         txtEdad!!.horizontalAlignment = 0
         txtEdad!!.font = Font("Times New Roman", Font.PLAIN, 13)
@@ -196,13 +197,18 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
 
     fun llenarCampos(){
         val chef: Cocinero ?= cocineroRepository.getChefByCodigoUnico(uniqueCode)
-        println(cocineroRepository.getChefs())
+
+        fun getFechaContratacion(fecha: Date): String {
+            val formato = SimpleDateFormat("yyyy-MM-dd")
+            formato.timeZone = TimeZone.getTimeZone("UTC") // Establece la zona horaria a UTC
+            return formato.format(fecha)
+        }
         if(chef !== null){
             txtCodigoUnico!!.setText(uniqueCode)
             txtNombres!!.setText(chef!!.nombre)
             txtApellidos!!.setText(chef.apellido)
             txtEdad!!.setText(chef.edad.toString())
-            txtFechaContratacion!!.setText(chef.fechaContratacion.toString())
+            txtFechaContratacion!!.setText(getFechaContratacion(chef.fechaContratacion))
             txtSalario!!.setText(chef.salario.toString())
             txtEsChefPrincipal!!.setText(
                 if(chef.isMainChef) "Si"  else "No"
@@ -228,7 +234,7 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
         })
     }
 
-    fun agregarCocinero(){
+    fun actualizarDatosCocinero(){
         var btnAgregarCocinero = JButton("Guardar")
         mainPanel!!.add(btnAgregarCocinero)
         mainPanel!!.setLayout(null)
@@ -242,25 +248,61 @@ class ActualizacionCocineroInterface ( numeroUnico: String): JFrame() {
                 val codigoUnico: String = txtCodigoUnico!!.getText()
                 val nombres: String = txtNombres!!.getText()
                 val apellidos: String = txtApellidos!!.getText()
-                val edad: Int = txtEdad!!.getText().toInt()
-                val fechaContratacion: Date = Date(txtFechaContratacion!!.getText())
-                val salario: Double = txtSalario!!.getText().toDouble()
+                val edad: Int = try {
+                    txtEdad!!.getText().toInt()
+                } catch (ex: NumberFormatException) {
+                    // Manejo de error: la edad no es un número válido
+                    JOptionPane.showMessageDialog(
+                        this@ActualizacionCocineroInterface, "La edad debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
+                val fechaContratacionString: String = txtFechaContratacion!!.getText()
+                val fechaContratacion: Date = try {
+                    SimpleDateFormat("yyyy-MM-dd").parse(fechaContratacionString)
+                } catch (ex: ParseException) {
+                    // Manejo de error: la fecha no tiene el formato esperado
+                    JOptionPane.showMessageDialog(
+                        this@ActualizacionCocineroInterface, "Formato de fecha incorrecto. Se espera este formato: yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
+
+                val salario: Double = try {
+                    txtSalario!!.getText().toDouble()
+                } catch (ex: NumberFormatException) {
+                    // Manejo de error: el salario no es un número válido
+                    JOptionPane.showMessageDialog(
+                        this@ActualizacionCocineroInterface, "El salario debe ser un número válido.Ej: 200.00", "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
+
                 val isMainChef: Boolean = txtEsChefPrincipal!!.getText().equals("Si")
+//
 
-                val newChef: Cocinero = Cocinero(
-                    codigoUnico, nombres, apellidos, edad, fechaContratacion, salario, isMainChef
-                )
+                if (codigoUnico.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() || edad <= 17 || salario <= 0) {
+                    JOptionPane.showMessageDialog(
+                        this@ActualizacionCocineroInterface, "Todos los campos deben ser completados, el salario debe ser mayor a 0 y la edad debe ser mayor o igual a 18 años",
+                        "Error", JOptionPane.ERROR_MESSAGE
+                    )
+                }else{
+                    val newChef: Cocinero = Cocinero(
+                        codigoUnico, nombres, apellidos, edad, fechaContratacion, salario, isMainChef
+                    )
 
-                println(newChef.fechaContratacion)
-                println(newChef.edad)
-                println(newChef.codigoUnico)
-                println(newChef.isMainChef)
-                println(newChef.salario)
+                    cocineroRepository.updateByCodigoUnico(uniqueCode, newChef)
 
-                limpiarCampos()
+                    limpiarCampos()
 
-//                isVisible = false
-//                CocineroInterface().isVisible = true
+                    JOptionPane.showMessageDialog(
+                        this@ActualizacionCocineroInterface, "Se han actualizado los datos correctamente",
+                        "Success", JOptionPane.INFORMATION_MESSAGE
+                    )
+
+                    isVisible = false
+                    CocineroInterface().isVisible = true
+                }
             }
         })
     }

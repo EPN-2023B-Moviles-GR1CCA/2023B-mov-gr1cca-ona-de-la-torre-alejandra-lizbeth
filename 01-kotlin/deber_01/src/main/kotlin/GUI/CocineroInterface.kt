@@ -136,7 +136,7 @@ class CocineroInterface(): JFrame() {
 
         val opcionesColumn = table.getColumn("Opciones")
         opcionesColumn.cellRenderer = ButtonRenderer()
-        opcionesColumn.cellEditor = ButtonEditor(table, this)
+        opcionesColumn.cellEditor = ButtonEditor(table, this, cocineroRepository)
 
         // Add the table to a scroll pane, then add the scroll pane to the frame
         val scrollPane = JScrollPane(table)
@@ -174,7 +174,7 @@ class CocineroInterface(): JFrame() {
         }
     }
 
-    class ButtonEditor(private val table: JTable, private val window: JFrame) : AbstractCellEditor(), TableCellEditor, ActionListener {
+    class ButtonEditor(private val table: JTable, private val window: JFrame, private val cocineroRepository: CocineroRepository) : AbstractCellEditor(), TableCellEditor, ActionListener {
         private val panel = JPanel(FlowLayout(FlowLayout.LEFT))
         private val editButton = JButton()
         private val deleteButton = JButton()
@@ -209,7 +209,6 @@ class CocineroInterface(): JFrame() {
                 // Get the data of the selected row
                 val numeroUnico = table.getValueAt(selectedRow, 0) as String
 
-                println(numeroUnico)
                 editButton.addActionListener(object : ActionListener {
                     override fun actionPerformed(e: ActionEvent) {
                         window.isVisible = false
@@ -221,13 +220,26 @@ class CocineroInterface(): JFrame() {
                 // Get the data of the selected row
                 val numeroUnico = table.getValueAt(selectedRow, 0) as String
 
-                println(numeroUnico)
-                deleteButton.addActionListener(object : ActionListener {
-                    override fun actionPerformed(e: ActionEvent) {
-//                        window.isVisible = false
-                        EliminarCocineroInterface(numeroUnico).isVisible = true
-                    }
-                })
+                fun showDeleteConfirmationDialog(): Boolean {
+                    val confirmation = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Estás seguro de que deseas eliminar este cocinero?",
+                        "Confirmar Eliminación",
+                        JOptionPane.YES_NO_OPTION
+                    )
+
+                    return confirmation == JOptionPane.YES_OPTION
+                }
+
+                val confirmacion = showDeleteConfirmationDialog()
+
+                if (confirmacion) {
+                    cocineroRepository.deleteByCodigoUnico(numeroUnico)
+
+                    // Actualiza la tabla después de la eliminación
+                    (table.model as DefaultTableModel).removeRow(selectedRow)
+                }
+
             } else if (e.source == viewButton) {
                 val selectedRow = table.selectedRow
                 // Get the data of the selected row
@@ -243,6 +255,8 @@ class CocineroInterface(): JFrame() {
             }
         }
     }
+
+
 
     private fun mostrarMainInterface() {
         SwingUtilities.invokeLater {

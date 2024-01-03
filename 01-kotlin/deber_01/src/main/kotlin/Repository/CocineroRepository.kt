@@ -79,12 +79,14 @@ class CocineroRepository(private val filePath: String) {
         return null
     }
 
-    fun deleteByCodigoUnico(uniqueCode: String) {
+    fun deleteByCodigoUnico(uniqueCode: String) : Boolean{
         println("Borrando cocinero")
         var index = cocineros.indexOfFirst { it.codigoUnico == uniqueCode }
         if (index != -1) {
             cocineros.removeAt(index)
             saveDataToFile()
+            return true
         }
+        return false
     }
 }
