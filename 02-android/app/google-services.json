@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "753932611736",
+    "project_id": "b2023-gr1cca-alod",
+    "storage_bucket": "b2023-gr1cca-alod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753932611736:android:7cf4ac564316fbb8df20ed",
+        "android_client_info": {
+          "package_name": "com.example.gr1accalod2023b"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4ENO12vOo7Dk6_YWd_i6txFsDmubvmgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
