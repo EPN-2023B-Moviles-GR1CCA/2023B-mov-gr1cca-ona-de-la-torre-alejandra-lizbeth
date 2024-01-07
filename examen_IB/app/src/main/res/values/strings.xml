@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">examen_IB</string>
+
+    <string name="titulo_lista_cocineros">Cocineros</string>
+    <string name="btn_crear_cocinero">Crear</string>
+    <dimen name="lv_width">355dp</dimen>
+    <dimen name="lv_height">445dp</dimen>
+</resources>
