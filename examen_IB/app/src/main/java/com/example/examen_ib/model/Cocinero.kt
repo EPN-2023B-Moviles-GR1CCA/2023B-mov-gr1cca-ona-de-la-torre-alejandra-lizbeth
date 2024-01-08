@@ -14,7 +14,7 @@ class Cocinero(
 
     override fun toString(): String {
 //        return "Cocinero(codigoUnico='$codigoUnico', nombre='$nombre', apellido='$apellido', edad=$edad, fechaContratacion=$fechaContratacion, salario=$salario, isMainChef=$isMainChef)"
-        return "$nombre $apellido. contratado el '$fechaContratacion' con un salario de '$salario'"
+        return "codigo unico es: '$codigoUnico' El cocinero $nombre $apellido. fue contratado el '$fechaContratacion' con un salario de '$salario'"
     }
 
 

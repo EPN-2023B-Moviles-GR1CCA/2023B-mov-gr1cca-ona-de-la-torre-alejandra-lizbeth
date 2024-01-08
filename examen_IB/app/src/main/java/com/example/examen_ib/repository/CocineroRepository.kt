@@ -19,7 +19,7 @@ class CocineroRepository (
         val scriptSQLCrearTablaCocinero =
             """
                 CREATE TABLE COCINERO(
-                codigoUnico VARCHAR(50) PRIMARY KEY,
+                codigoUnico VARCHAR(50) PRIMARY KEY ON CONFLICT ABORT,
                 nombre VARCHAR(50),
                 apellido VARCHAR(50),
                 edad INTEGER,
