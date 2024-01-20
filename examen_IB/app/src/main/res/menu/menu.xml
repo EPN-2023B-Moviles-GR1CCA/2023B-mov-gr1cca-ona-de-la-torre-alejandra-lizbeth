@@ -6,7 +6,7 @@
         android:id="@+id/mi_editar"
         android:title="Editar" />
     <item
-        android:id="@+id/mi_eliminar_comida"
+        android:id="@+id/mi_eliminar"
         android:title="Eliminar" />
     <item
         android:id="@+id/mi_ver_comida"

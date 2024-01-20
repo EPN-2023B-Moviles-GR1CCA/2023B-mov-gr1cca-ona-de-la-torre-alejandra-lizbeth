@@ -1,5 +1,6 @@
 package com.example.examen_ib
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -102,7 +103,11 @@ class Cocinero_edicion : AppCompatActivity() {
                             .bddAplicacion!!.actualizarCocineroPorCodigoUnico(datosActualizados)
 
                         if(respuesta) {
-                            mostrarSnackbar("Los datos del cocinero se han actualizado exitosamente")
+//                            mostrarSnackbar("Los datos del cocinero se han actualizado exitosamente")
+                            val data = Intent()
+                            data.putExtra("message", "Los datos del cocinero se han actualizado exitosamente")
+                            setResult(RESULT_OK, data)
+                            finish()
                         }else{
                             mostrarSnackbar("Hubo un problema al actualizar los datos")
                         }

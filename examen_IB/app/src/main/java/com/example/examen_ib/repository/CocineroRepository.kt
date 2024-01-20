@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.example.examen_ib.model.Cocinero
 import com.example.examen_ib.model.Comida
 import java.util.Date
@@ -14,7 +15,7 @@ class CocineroRepository (
     contexto,
     "cocinero_comida", //nombre BDD
     null,
-    2
+    5
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         val scriptSQLCrearTablaCocinero =
@@ -30,11 +31,49 @@ class CocineroRepository (
                 )
             """.trimIndent()
         db?.execSQL(scriptSQLCrearTablaCocinero)
+
+        val scriptSQLCrearTablaComida =
+            """
+            CREATE TABLE COMIDA(
+                identificador VARCHAR(50) PRIMARY KEY ON CONFLICT ABORT,
+                nombre VARCHAR(50),
+                fechaCreacion TEXT,
+                esPlatoDelDia INTEGER,
+                tipoCocina VARCHAR(50),
+                cantidadProductos INTEGER,
+                precio DOUBLE,
+                codigoUnico VARCHAR(50),
+                CONSTRAINT fk_cocineros
+                    FOREIGN KEY (codigoUnico)
+                    REFERENCES COCINERO(codigoUnico)
+                    ON DELETE CASCADE
+            )
+            """.trimIndent()
+        db?.execSQL(scriptSQLCrearTablaComida)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 2) {
-            // Código para realizar la actualización de esquema desde la versión 1 a la versión 2
+        if (oldVersion < 5) {
+            // Elimina las tablas si existen
+            db?.execSQL("DROP TABLE IF EXISTS COMIDA")
+            db?.execSQL("DROP TABLE IF EXISTS COCINERO")
+
+            // Vuelve a crear la tabla COCINERO
+            val scriptSQLCrearTablaCocinero =
+                """
+                CREATE TABLE COCINERO(
+                codigoUnico VARCHAR(50) PRIMARY KEY ON CONFLICT ABORT,
+                nombre VARCHAR(50),
+                apellido VARCHAR(50),
+                edad INTEGER,
+                fechaContratacion TEXT,
+                salario DOUBLE,
+                isMainChef INTEGER
+                )
+                """.trimIndent()
+            db?.execSQL(scriptSQLCrearTablaCocinero)
+
+            // Vuelve a crear la tabla COMIDA con ON DELETE CASCADE
             val scriptSQLCrearTablaComida =
                 """
                 CREATE TABLE COMIDA(
@@ -45,10 +84,13 @@ class CocineroRepository (
                 tipoCocina VARCHAR(50),
                 cantidadProductos INTEGER,
                 precio DOUBLE,
-                codigoUnicoCocinero VARCHAR(50),
-                FOREIGN KEY(codigoUnicoCocinero) REFERENCES COCINERO(codigoUnico)
+                codigoUnico VARCHAR(50),
+                CONSTRAINT fk_cocineros
+                    FOREIGN KEY (codigoUnico)
+                    REFERENCES COCINERO(codigoUnico)
+                    ON DELETE CASCADE
                 )
-            """.trimIndent()
+                """.trimIndent()
             db?.execSQL(scriptSQLCrearTablaComida)
         }
     }
@@ -217,7 +259,7 @@ class CocineroRepository (
         valoresAGuardar.put("tipoCocina", newFood.tipoCocina)
         valoresAGuardar.put("cantidadProductos", newFood.cantidadProductos)
         valoresAGuardar.put("precio", newFood.precio )
-        valoresAGuardar.put("codigoUnicoCocinero", newFood.codigoUnicoCocinero)
+        valoresAGuardar.put("codigoUnico", newFood.codigoUnicoCocinero)
 
         val resultadoGuardar = basedatosEscritura
             .insert(
@@ -231,13 +273,12 @@ class CocineroRepository (
     }
 
     fun obtenerComidasPorCocinero(identificadorCocinero: String): ArrayList<Comida> {
-
         val comidas = arrayListOf<Comida>()
         val baseDatosLectura = readableDatabase
 
         val scriptConsultaLectura = """
             SELECT * FROM COMIDA
-            WHERE CODIGOUNICOCOCINERO = ?
+            WHERE CODIGOUNICO = ?
         """.trimIndent()
 
         val parametrosConsultaLectura = arrayOf(identificadorCocinero)
@@ -276,6 +317,7 @@ class CocineroRepository (
 
         resultadoConsultaLectura?.close()
         baseDatosLectura.close()
+
         return comidas //arreglo
     }
 
@@ -283,7 +325,7 @@ class CocineroRepository (
         val baseDatosLectura = readableDatabase
 
         val scriptConsultaLectura = """
-            SELECT * FROM COMIDA WHERE IDENTIFICADOR = ? AND CODIGOUNICOCOCINERO = ?
+            SELECT * FROM COMIDA WHERE IDENTIFICADOR = ? AND CODIGOUNICO = ?
         """.trimIndent()
 
         val parametrosConsultaLectura = arrayOf(identificador, codigoUnicoCocinero)
@@ -342,7 +384,7 @@ class CocineroRepository (
             .update(
                 "COMIDA", //tabla
                 valoresAActualizar,
-                "identificador = ? and codigoUnicoCocinero = ?",
+                "identificador = ? and codigoUnico = ?",
                 parametrosConsultaActualizar
             )
         conexionEscritura.close()
@@ -357,7 +399,7 @@ class CocineroRepository (
         val resultadoEliminacion = conexionEscritura
             .delete(
                 "COMIDA", //tabla
-                "identificador = ? and codigoUnicoCocinero = ?",
+                "identificador = ? and codigoUnico = ?",
                 parametrosConsultaDelete
             )
 

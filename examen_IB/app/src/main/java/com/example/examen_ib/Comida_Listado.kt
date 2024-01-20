@@ -1,9 +1,11 @@
 package com.example.examen_ib
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.example.examen_ib.model.Comida
 import com.example.examen_ib.repository.CocineroRepository
@@ -34,7 +37,6 @@ class Comida_Listado : AppCompatActivity() {
 
         if(codigoUnicoCocinero != null){
             comidas = BDD.bddAplicacion!!.obtenerComidasPorCocinero(codigoUnicoCocinero)
-
             if(comidas.size != 0){
                 //listado de comidas
                 val listView = findViewById<ListView>(R.id.lv_listados_comidas)
@@ -78,7 +80,8 @@ class Comida_Listado : AppCompatActivity() {
         if (datosExtras != null) {
             intent.putExtras(datosExtras)
         }
-        startActivity(intent)
+//        startActivity(intent)
+        callbackContenidoIntentExplicito.launch(intent)
     }
 
     //creacion de las opciones de accion (editar, eliminar)
@@ -104,7 +107,7 @@ class Comida_Listado : AppCompatActivity() {
                 val identificador = comidas.get(posicionItemSeleccionado).identificador
                 val nombre_Comida = comidas.get(posicionItemSeleccionado).nombre
                 val codigoCocinero = comidas.get(posicionItemSeleccionado).codigoUnicoCocinero
-                mostrarSnackbar(identificador)
+//                mostrarSnackbar(identificador)
                 val extras = Bundle()
                 extras.putString("identificador", identificador)
                 extras.putString("codigoCocinero", codigoCocinero)
@@ -115,7 +118,7 @@ class Comida_Listado : AppCompatActivity() {
             R.id.mi_eliminar_comida -> {
                 val identificador = comidas.get(posicionItemSeleccionado).identificador
                 val codigoCocinero = comidas.get(posicionItemSeleccionado).codigoUnicoCocinero
-                mostrarSnackbar(identificador)
+//                mostrarSnackbar(identificador)
                 val result: Boolean = abrirDialogo(identificador, codigoCocinero)
                 if(result) true else
 
@@ -139,6 +142,7 @@ class Comida_Listado : AppCompatActivity() {
 
                 if (respuesta == true) {
                     mostrarSnackbar("Comida eliminado exitosamente")
+                    cargarListaComidas(codigoCocinero)
                     eliminacionExitosa = true
                 } else {
                     mostrarSnackbar("No se pudo eliminar esta comida")
@@ -155,5 +159,33 @@ class Comida_Listado : AppCompatActivity() {
         dialogo.show()
 
         return eliminacionExitosa
+    }
+
+    val callbackContenidoIntentExplicito =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ){
+                result ->
+            if(result.resultCode == Activity.RESULT_OK){
+                if(result.data != null){
+                    val data = result.data
+                    cargarListaComidas("${data?.getStringExtra("codigoCocinero")}")
+                    mostrarSnackbar("${data?.getStringExtra("message")}")
+                }
+            }
+        }
+
+    private fun cargarListaComidas(codigoCocinero: String) {
+        // Cargar la lista de comidas del cocinero desde la base de datos y notificar al adaptador
+        comidas = BDD.bddAplicacion!!.obtenerComidasPorCocinero(codigoCocinero)
+        val adaptador = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            comidas
+        )
+        val listView = findViewById<ListView>(R.id.lv_listados_comidas)
+        listView.adapter = adaptador
+        adaptador.notifyDataSetChanged()
+        registerForContextMenu(listView)
     }
 }

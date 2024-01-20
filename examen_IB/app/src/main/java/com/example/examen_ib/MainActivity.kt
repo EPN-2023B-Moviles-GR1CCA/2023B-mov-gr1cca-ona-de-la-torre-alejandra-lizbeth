@@ -1,5 +1,6 @@
 package com.example.examen_ib
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.examen_ib.model.Cocinero
@@ -50,45 +52,11 @@ class MainActivity : AppCompatActivity() {
         val btnCrearCocinero = findViewById<Button>(R.id.id_btn_crear)
         btnCrearCocinero
             .setOnClickListener {
-                irActividad(Cocinero_creacion::class.java)
+//                irActividad(Cocinero_creacion::class.java)
+                val intent = Intent(this, Cocinero_creacion::class.java)
+                callbackContenidoIntentExplicito.launch(intent)
             }
-
-
-//        val botonIntentImplicito = findViewById<Button>(
-//            R.id.btn_ir_intent_implicito
-//        )
-//        botonIntentImplicito
-//            .setOnClickListener{
-//                val intentConRespuesta = Intent(
-//                    Intent.ACTION_PICK,
-//                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-//                )
-//                callbackIntentImplicitoTelefono.launch(intentConRespuesta)
-//            }
-//
-//        val botonIntentExplicito = findViewById<Button>(
-//            R.id.btn_ir_intent_explicito
-//        )
-//        botonIntentExplicito
-//            .setOnClickListener{
-//                abrirActividadConParametros(
-//                    (CIntentExplicitoParametros::class.java)
-//                )
-//            }
-//
-//        val botonSqlite = findViewById<Button>(R.id.btn_sqlite)
-//        botonSqlite
-//            .setOnClickListener{
-//                irActividad(ECrudEntrenador::class.java)
-//            }
     }//termina onCreate
-
-    fun irActividad(
-        clase: Class<*>
-    ){
-        val intent = Intent(this, clase)
-        startActivity(intent)
-    }
 
     fun mostrarSnackbar(texto:String){
         Snackbar
@@ -122,14 +90,14 @@ class MainActivity : AppCompatActivity() {
             R.id.mi_editar ->{
                 val codigoUnico = cocineros.get(posicionItemSeleccionado).codigoUnico
                 val nombre_Cocinero = cocineros.get(posicionItemSeleccionado).nombre + " " + cocineros.get(posicionItemSeleccionado).apellido
-                mostrarSnackbar(codigoUnico)
+//                mostrarSnackbar(codigoUnico)
                 val extras = Bundle()
                 extras.putString("codigoUnico", codigoUnico)
                 extras.putString("nombreCocinero", nombre_Cocinero)
                 irEdicionCocinero(Cocinero_edicion::class.java, extras)
                 return true
             }
-            R.id.mi_eliminar_comida -> {
+            R.id.mi_eliminar -> {
                 mostrarSnackbar(cocineros.get(posicionItemSeleccionado).codigoUnico)
                 val result: Boolean = abrirDialogo(cocineros.get(posicionItemSeleccionado).codigoUnico)
                 if(result) true else
@@ -164,6 +132,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (respuesta == true) {
                     mostrarSnackbar("Cocinero eliminado exitosamente")
+                    cargarListaCocineros()  // Actualiza la lista después de la eliminación
                     eliminacionExitosa = true
                 } else {
                     mostrarSnackbar("No se pudo eliminar al cocinero")
@@ -187,7 +156,36 @@ class MainActivity : AppCompatActivity() {
         if (datosExtras != null) {
             intent.putExtras(datosExtras)
         }
-        startActivity(intent)
+//        startActivity(intent)
+        callbackContenidoIntentExplicito.launch(intent)
+    }
+
+    val callbackContenidoIntentExplicito =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ){
+                result ->
+            if(result.resultCode == Activity.RESULT_OK){
+                if(result.data != null){
+                    val data = result.data
+                    cargarListaCocineros()
+                    mostrarSnackbar("${data?.getStringExtra("message")}")
+                }
+            }
+        }
+
+    private fun cargarListaCocineros() {
+        // Cargar la lista de cocineros desde la base de datos y notificar al adaptador
+        cocineros = BDD.bddAplicacion!!.obtenerCocineros()
+        val adaptador = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            cocineros
+        )
+        val listView = findViewById<ListView>(R.id.lv_list_cocineros)
+        listView.adapter = adaptador
+        adaptador.notifyDataSetChanged()
+        registerForContextMenu(listView)
     }
 
 }

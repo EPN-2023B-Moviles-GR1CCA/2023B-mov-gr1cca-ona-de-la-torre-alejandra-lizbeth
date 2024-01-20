@@ -1,5 +1,6 @@
 package com.example.examen_ib
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -79,7 +80,12 @@ class Comida_creacion : AppCompatActivity() {
                             .bddAplicacion!!.crearComida(newFood)
 
                         if(respuesta) {
-                            mostrarSnackbar("La comida se ha creado exitosamente")
+//                            mostrarSnackbar("La comida se ha creado exitosamente")
+                            val data = Intent()
+                            data.putExtra("codigoCocinero", codigoUnicoCocinero)
+                            data.putExtra("message", "La comida se ha creado exitosamente")
+                            setResult(RESULT_OK, data)
+                            finish()
                         }else{
                             mostrarSnackbar("Hubo un problema al crear la comida")
                         }

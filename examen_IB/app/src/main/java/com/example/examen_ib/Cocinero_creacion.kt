@@ -1,6 +1,7 @@
 package com.example.examen_ib
 
 import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -71,7 +72,12 @@ class Cocinero_creacion : AppCompatActivity() {
                             .bddAplicacion!!.crearCocinero(newChef)
 
                         if(respuesta) {
-                            mostrarSnackbar("El cocinero se ha creado exitosamente")
+//                            mostrarSnackbar("El cocinero se ha creado exitosamente")
+                            // Enviar resultado a la actividad anterior
+                            val data = Intent()
+                            data.putExtra("message", "El cocinero se ha creado exitosamente")
+                            setResult(RESULT_OK, data)
+                            finish() // Finalizar esta actividad y regresar a la anterior
                         }else{
                             mostrarSnackbar("Hubo un problema en la creacion del cocinero")
                         }
