@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.examen_ib.model.Cocinero
+import com.example.examen_ib.model.Comida
 import java.util.Date
 
 class CocineroRepository (
@@ -13,7 +14,7 @@ class CocineroRepository (
     contexto,
     "cocinero_comida", //nombre BDD
     null,
-    1
+    2
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         val scriptSQLCrearTablaCocinero =
@@ -25,15 +26,34 @@ class CocineroRepository (
                 edad INTEGER,
                 fechaContratacion TEXT,
                 salario DOUBLE,
-                isMainChef BOOLEAN
+                isMainChef INTEGER
                 )
             """.trimIndent()
         db?.execSQL(scriptSQLCrearTablaCocinero)
     }
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        TODO("Not yet implemented")
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 2) {
+            // Código para realizar la actualización de esquema desde la versión 1 a la versión 2
+            val scriptSQLCrearTablaComida =
+                """
+                CREATE TABLE COMIDA(
+                identificador VARCHAR(50) PRIMARY KEY ON CONFLICT ABORT,
+                nombre VARCHAR(50),
+                fechaCreacion TEXT,
+                esPlatoDelDia INTEGER,
+                tipoCocina VARCHAR(50),
+                cantidadProductos INTEGER,
+                precio DOUBLE,
+                codigoUnicoCocinero VARCHAR(50),
+                FOREIGN KEY(codigoUnicoCocinero) REFERENCES COCINERO(codigoUnico)
+                )
+            """.trimIndent()
+            db?.execSQL(scriptSQLCrearTablaComida)
+        }
     }
+
+    /* CRUD Cocineros */
 
     fun crearCocinero(newChef: Cocinero): Boolean{
         val basedatosEscritura = writableDatabase
@@ -45,7 +65,7 @@ class CocineroRepository (
         valoresAGuardar.put("edad", newChef.edad)
         valoresAGuardar.put("fechaContratacion", newChef.fechaContratacion)
         valoresAGuardar.put("salario", newChef.salario)
-        valoresAGuardar.put("isMainChef", newChef.isMainChef)
+        valoresAGuardar.put("isMainChef", if(newChef.isMainChef) 1 else 0)
 
         val resultadoGuardar = basedatosEscritura
             .insert(
@@ -67,13 +87,9 @@ class CocineroRepository (
 
         val resultadoConsulta = baseDatosLectura.rawQuery(scriptConsultaLectura, null)
 
-
-
         val cocineros = arrayListOf<Cocinero>()
 
-
         if(resultadoConsulta != null && resultadoConsulta.moveToFirst()){
-
 
             do{
                 val codigoUnico = resultadoConsulta.getString(0) //Indice 0
@@ -92,7 +108,7 @@ class CocineroRepository (
                     usuarioEncontrado.edad = edad
                     usuarioEncontrado.fechaContratacion = fechaContratacion
                     usuarioEncontrado.salario = salario
-                    usuarioEncontrado.isMainChef = isMainChef.toBoolean()
+                    usuarioEncontrado.isMainChef = isMainChef.equals("1")
 
                     cocineros.add(usuarioEncontrado)
                 }
@@ -121,7 +137,6 @@ class CocineroRepository (
         val existeUsuario = resultadoConsultaLectura.moveToFirst()
 
         val usuarioEncontrado = Cocinero("", "", "", 0, "1900-01-01", 0.0, false)
-        // val arreglo = arrayListOf<BEntrenador>()
         if(existeUsuario){
             do{
                 val codigoUnico = resultadoConsultaLectura.getString(0) //Indice 0
@@ -133,15 +148,13 @@ class CocineroRepository (
                 val isMainChef = resultadoConsultaLectura.getString(6)
 
                 if(codigoUnico != null){
-                    // val usuarioEncontrado = BEntrenador(0, "", "")
                     usuarioEncontrado.codigoUnico = codigoUnico
                     usuarioEncontrado.nombre = nombre
                     usuarioEncontrado.apellido = apellido
                     usuarioEncontrado.edad = edad
                     usuarioEncontrado.fechaContratacion = fechaContratacion
                     usuarioEncontrado.salario = salario
-                    usuarioEncontrado.isMainChef = isMainChef.toBoolean()
-                    // arreglo.add(usuarioEncontrado)
+                    usuarioEncontrado.isMainChef = isMainChef.equals("1")
                 }
             } while (resultadoConsultaLectura.moveToNext())
         }
@@ -149,6 +162,207 @@ class CocineroRepository (
         resultadoConsultaLectura.close()
         baseDatosLectura.close()
         return usuarioEncontrado //arreglo
+    }
+
+    fun actualizarCocineroPorCodigoUnico(
+        datosActualizados: Cocinero
+    ): Boolean{
+        val conexionEscritura = writableDatabase
+        val valoresAActualizar = ContentValues()
+        valoresAActualizar.put("nombre", datosActualizados.nombre)
+        valoresAActualizar.put("apellido", datosActualizados.apellido)
+        valoresAActualizar.put("edad", datosActualizados.edad)
+        valoresAActualizar.put("fechaContratacion", datosActualizados.fechaContratacion)
+        valoresAActualizar.put("salario", datosActualizados.salario)
+        valoresAActualizar.put("isMainChef", if(datosActualizados.isMainChef) 1 else 0)
+        //where id = ?
+        val parametrosConsultaActualizar = arrayOf(datosActualizados.codigoUnico)
+        val resultadoActualizcion = conexionEscritura
+            .update(
+                "COCINERO", //tabla
+                valoresAActualizar,
+                "codigoUnico = ?",
+                parametrosConsultaActualizar
+            )
+        conexionEscritura.close()
+        return if (resultadoActualizcion == -1) false else true
+    }
+
+    fun eliminarCocineroPorCodigoUnico(codigoUnico: String): Boolean{
+        val conexionEscritura = writableDatabase
+
+        val parametrosConsultaDelete = arrayOf( codigoUnico)
+
+        val resultadoEliminacion = conexionEscritura
+            .delete(
+                "COCINERO", //tabla
+                "codigoUnico = ?",
+                parametrosConsultaDelete
+            )
+
+        conexionEscritura.close()
+        return if(resultadoEliminacion == -1) false else true
+    }
+
+    /* CRUD Comidas */
+
+    fun crearComida(newFood: Comida): Boolean{
+        val basedatosEscritura = writableDatabase
+        val valoresAGuardar = ContentValues()
+
+        valoresAGuardar.put("identificador", newFood.identificador)
+        valoresAGuardar.put("nombre", newFood.nombre)
+        valoresAGuardar.put("fechaCreacion", newFood.fechaCreacion)
+        valoresAGuardar.put("esPlatoDelDia", if(newFood.esPlatoDelDia) 1 else 0)
+        valoresAGuardar.put("tipoCocina", newFood.tipoCocina)
+        valoresAGuardar.put("cantidadProductos", newFood.cantidadProductos)
+        valoresAGuardar.put("precio", newFood.precio )
+        valoresAGuardar.put("codigoUnicoCocinero", newFood.codigoUnicoCocinero)
+
+        val resultadoGuardar = basedatosEscritura
+            .insert(
+                "COMIDA", //nombre de la tabla
+                null,
+                valoresAGuardar //valores
+            )
+
+        basedatosEscritura.close()
+        return if (resultadoGuardar.toInt() == -1) false else true
+    }
+
+    fun obtenerComidasPorCocinero(identificadorCocinero: String): ArrayList<Comida> {
+
+        val comidas = arrayListOf<Comida>()
+        val baseDatosLectura = readableDatabase
+
+        val scriptConsultaLectura = """
+            SELECT * FROM COMIDA
+            WHERE CODIGOUNICOCOCINERO = ?
+        """.trimIndent()
+
+        val parametrosConsultaLectura = arrayOf(identificadorCocinero)
+        val resultadoConsultaLectura = baseDatosLectura.rawQuery(
+            scriptConsultaLectura, //Consulta
+            parametrosConsultaLectura //Parametros
+        )
+
+        if(resultadoConsultaLectura != null && resultadoConsultaLectura.moveToFirst()){
+
+            do{
+                val identificador = resultadoConsultaLectura.getString(0)
+                val nombre = resultadoConsultaLectura.getString(1)
+                val fechaCreacion = resultadoConsultaLectura.getString(2)
+                val esPlatoDelDia = resultadoConsultaLectura.getString(3)
+                val tipoCocina = resultadoConsultaLectura.getString(4)
+                val cantidadProductos = resultadoConsultaLectura.getInt(5)
+                val precio = resultadoConsultaLectura.getDouble(6)
+                val codigoUnicoCocinero = resultadoConsultaLectura.getString(7)
+
+                if(identificador != null){
+                    val comidaEncontrada = Comida("com-01", "Encebollado", "2024-01-01", true, "Ecuatoriana", 5, 3.5, "coc-01")
+                    comidaEncontrada.identificador = identificador
+                    comidaEncontrada.nombre = nombre
+                    comidaEncontrada.fechaCreacion = fechaCreacion
+                    comidaEncontrada.esPlatoDelDia = esPlatoDelDia.equals("1")
+                    comidaEncontrada.tipoCocina = tipoCocina
+                    comidaEncontrada.cantidadProductos = cantidadProductos
+                    comidaEncontrada.precio = precio
+                    comidaEncontrada.codigoUnicoCocinero = codigoUnicoCocinero
+
+                    comidas.add(comidaEncontrada)
+                }
+            } while (resultadoConsultaLectura.moveToNext())
+        }
+
+        resultadoConsultaLectura?.close()
+        baseDatosLectura.close()
+        return comidas //arreglo
+    }
+
+    fun consultarComidaPorIdentificadorYCocinero(identificador: String, codigoUnicoCocinero: String): Comida{
+        val baseDatosLectura = readableDatabase
+
+        val scriptConsultaLectura = """
+            SELECT * FROM COMIDA WHERE IDENTIFICADOR = ? AND CODIGOUNICOCOCINERO = ?
+        """.trimIndent()
+
+        val parametrosConsultaLectura = arrayOf(identificador, codigoUnicoCocinero)
+
+        val resultadoConsultaLectura = baseDatosLectura.rawQuery(
+            scriptConsultaLectura, //Consulta
+            parametrosConsultaLectura //Parametros
+        )
+
+        val existeComida = resultadoConsultaLectura.moveToFirst()
+
+        val comidaEncontrada = Comida("", "", "1900-01-01", false, "", 0, 0.0, "")
+        if(existeComida){
+            do{
+                val identificador = resultadoConsultaLectura.getString(0)
+                val nombre = resultadoConsultaLectura.getString(1)
+                val fechaCreacion = resultadoConsultaLectura.getString(2)
+                val esPlatoDelDia = resultadoConsultaLectura.getString(3)
+                val tipoCocina = resultadoConsultaLectura.getString(4)
+                val cantidadProductos = resultadoConsultaLectura.getInt(5)
+                val precio = resultadoConsultaLectura.getDouble(6)
+                val codigoUnicoCocinero = resultadoConsultaLectura.getString(7)
+
+                if(identificador != null){
+                    comidaEncontrada.identificador = identificador
+                    comidaEncontrada.nombre = nombre
+                    comidaEncontrada.fechaCreacion = fechaCreacion
+                    comidaEncontrada.esPlatoDelDia = esPlatoDelDia.equals("1")
+                    comidaEncontrada.tipoCocina = tipoCocina
+                    comidaEncontrada.cantidadProductos = cantidadProductos
+                    comidaEncontrada.precio = precio
+                    comidaEncontrada.codigoUnicoCocinero = codigoUnicoCocinero
+                }
+            } while (resultadoConsultaLectura.moveToNext())
+        }
+
+        resultadoConsultaLectura.close()
+        baseDatosLectura.close()
+        return comidaEncontrada //arreglo
+    }
+
+    fun actualizarComidaPorIdentificadorYCodigoCocinero(
+        datosActualizados: Comida
+    ): Boolean{
+        val conexionEscritura = writableDatabase
+        val valoresAActualizar = ContentValues()
+        valoresAActualizar.put("nombre", datosActualizados.nombre)
+        valoresAActualizar.put("fechaCreacion", datosActualizados.fechaCreacion)
+        valoresAActualizar.put("esPlatoDelDia", if(datosActualizados.esPlatoDelDia) 1 else 0)
+        valoresAActualizar.put("tipoCocina", datosActualizados.tipoCocina)
+        valoresAActualizar.put("cantidadProductos", datosActualizados.cantidadProductos)
+        valoresAActualizar.put("precio", datosActualizados.precio)
+        //where id = ?
+        val parametrosConsultaActualizar = arrayOf(datosActualizados.identificador, datosActualizados.codigoUnicoCocinero)
+        val resultadoActualizcion = conexionEscritura
+            .update(
+                "COMIDA", //tabla
+                valoresAActualizar,
+                "identificador = ? and codigoUnicoCocinero = ?",
+                parametrosConsultaActualizar
+            )
+        conexionEscritura.close()
+        return if (resultadoActualizcion == -1) false else true
+    }
+
+    fun eliminarComidaPorIdentificadorYCodigoCocinero(codigoComida: String, codigoUnico: String): Boolean{
+        val conexionEscritura = writableDatabase
+
+        val parametrosConsultaDelete = arrayOf( codigoComida, codigoUnico)
+
+        val resultadoEliminacion = conexionEscritura
+            .delete(
+                "COMIDA", //tabla
+                "identificador = ? and codigoUnicoCocinero = ?",
+                parametrosConsultaDelete
+            )
+
+        conexionEscritura.close()
+        return if(resultadoEliminacion == -1) false else true
     }
 
 }

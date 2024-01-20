@@ -1,25 +1,20 @@
 package com.example.examen_ib
 
-import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextMenu
-import android.view.MenuItem
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import androidx.appcompat.app.AlertDialog
+import android.widget.TextView
 import com.example.examen_ib.model.Cocinero
-import com.google.android.material.color.utilities.SchemeFruitSalad
 import com.google.android.material.snackbar.Snackbar
 
-class Cocinero_creacion : AppCompatActivity() {
+class Cocinero_edicion : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cocinero_creacion)
+        setContentView(R.layout.activity_cocinero_edicion)
 
         /*Definicion del combo box para chef principal*/
         val spinnerChefPrincipal = findViewById<Spinner>(R.id.sp_chef_principal)
@@ -33,7 +28,42 @@ class Cocinero_creacion : AppCompatActivity() {
         spinnerChefPrincipal.adapter = adaptador
         /*Fin definicion spinner*/
 
-        /*Creacion de cocinero*/
+        val codigoUnicoCocineroEdicion = intent.extras?.getString("codigoUnico")
+        val nombre_cocinero = intent.extras?.getString("nombreCocinero")
+        findViewById<TextView>(R.id.lbl_titulo_edicion_cocinero).setText(nombre_cocinero)
+
+        if(codigoUnicoCocineroEdicion != null){
+            mostrarSnackbar(codigoUnicoCocineroEdicion)
+            val cocineroEdicion = BDD.bddAplicacion!!.consultarCocineroPorCodigoUnico(codigoUnicoCocineroEdicion)
+            mostrarSnackbar(cocineroEdicion.isMainChef.toString())
+            val codigoUnico = findViewById<EditText>(R.id.txt_codigoUnico)
+            val nombre = findViewById<EditText>(R.id.txt_nombre)
+            val apellido = findViewById<EditText>(R.id.txt_apellido)
+            val edad = findViewById<EditText>(R.id.txt_edad)
+            val fechaContratacion = findViewById<EditText>(R.id.txt_fecha)
+            val salario = findViewById<EditText>(R.id.txt_salario)
+
+            codigoUnico.setText(cocineroEdicion.codigoUnico)
+            nombre.setText(cocineroEdicion.nombre)
+            apellido.setText(cocineroEdicion.apellido)
+            edad.setText(cocineroEdicion.edad.toString())
+            fechaContratacion.setText(cocineroEdicion.fechaContratacion)
+            salario.setText(cocineroEdicion.salario.toString())
+
+            // Configura el Spinner con el valor de isMainChef
+            val isMainChefArray = resources.getStringArray(R.array.items_chef_principal)
+
+            val isMainChefPosition = if (cocineroEdicion.isMainChef) {
+                isMainChefArray.indexOf("Si")
+            } else {
+                isMainChefArray.indexOf("No")
+            }
+
+            spinnerChefPrincipal.setSelection(isMainChefPosition)
+
+        }
+
+        /*Edicion de cocinero*/
         val btnGuardarChef = findViewById<Button>(R.id.btn_guardar_chef)
         btnGuardarChef
             .setOnClickListener {
@@ -55,9 +85,10 @@ class Cocinero_creacion : AppCompatActivity() {
                     fechaContratacion.error = null
                     salario.error = null
 
+//                    mostrarSnackbar(codigoUnico.text.toString())
                     if(validarCampos(codigoUnico, nombre, apellido, edad, fechaContratacion, salario, isMainChef)){
                         val esPrincipal = isMainChef.equals("Si")
-                        val newChef = Cocinero(
+                        val datosActualizados = Cocinero(
                             codigoUnico.text.toString(),
                             nombre.text.toString(),
                             apellido.text.toString(),
@@ -66,14 +97,14 @@ class Cocinero_creacion : AppCompatActivity() {
                             salario.text.toString().toDouble(),
                             esPrincipal
                         )
-
+//                        mostrarSnackbar(newChef.isMainChef.toString())
                         val respuesta = BDD
-                            .bddAplicacion!!.crearCocinero(newChef)
+                            .bddAplicacion!!.actualizarCocineroPorCodigoUnico(datosActualizados)
 
                         if(respuesta) {
-                            mostrarSnackbar("El cocinero se ha creado exitosamente")
+                            mostrarSnackbar("Los datos del cocinero se han actualizado exitosamente")
                         }else{
-                            mostrarSnackbar("Hubo un problema en la creacion del cocinero")
+                            mostrarSnackbar("Hubo un problema al actualizar los datos")
                         }
                     }
 
@@ -86,7 +117,7 @@ class Cocinero_creacion : AppCompatActivity() {
     fun mostrarSnackbar(texto:String){
         Snackbar
             .make(
-                findViewById(R.id.layout_creacion_cocinero), //view
+                findViewById(R.id.layout_edicion_cocinero), //view
                 texto, //texto
                 Snackbar.LENGTH_LONG //tiwmpo
             )

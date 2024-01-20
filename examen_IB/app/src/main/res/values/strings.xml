@@ -28,7 +28,24 @@
     <dimen name="lbl_height">16dp</dimen>
 
     <string-array name="items_chef_principal">
-        <item>Sí</item>
+        <item>--Seleccionar--</item>
+        <item>Si</item>
         <item>No</item>
+    </string-array>
+
+    <string-array name="items_tipo_cocina">
+        <item>--Seleccionar--</item>
+        <item>Ecuatoriana</item>
+        <item>Colombiana</item>
+        <item>Mexicana</item>
+        <item>Chilena</item>
+        <item>Argentina</item>
+        <item>Boliviana</item>
+        <item>Venezolana</item>
+        <item>Cubana</item>
+        <item>Francesa</item>
+        <item>Italiana</item>
+        <item>Rusa</item>
+        <item>Coreana</item>
     </string-array>
 </resources>

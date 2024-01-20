@@ -12,10 +12,16 @@ class Cocinero(
     var isMainChef: Boolean
 ) {
 
-    override fun toString(): String {
-//        return "Cocinero(codigoUnico='$codigoUnico', nombre='$nombre', apellido='$apellido', edad=$edad, fechaContratacion=$fechaContratacion, salario=$salario, isMainChef=$isMainChef)"
-        return "codigo unico es: '$codigoUnico' El cocinero $nombre $apellido. fue contratado el '$fechaContratacion' con un salario de '$salario'"
+    fun checkIsMainChef(isMainChef: Boolean): String{
+        return if(isMainChef) "Si" else "No"
     }
 
-
+    override fun toString(): String {
+        return "\ncodigo unico es: $codigoUnico " +
+                "\nCocinero $nombre $apellido. " +
+                "\nEdad: $edad" +
+                "\nContratado el $fechaContratacion " +
+                "\nSalario de $salario" +
+                "\n Chef principal: ${checkIsMainChef(isMainChef)}\n"
+    }
 }

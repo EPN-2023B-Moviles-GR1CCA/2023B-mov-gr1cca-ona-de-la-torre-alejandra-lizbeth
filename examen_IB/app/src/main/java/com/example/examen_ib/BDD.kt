@@ -5,6 +5,6 @@ import com.example.examen_ib.repository.CocineroRepository
 class BDD {
 
     companion object{
-        var tablaCocinero: CocineroRepository? = null
+        var bddAplicacion: CocineroRepository? = null
     }
 }

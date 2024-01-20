@@ -1,11 +1,16 @@
 package com.example.examen_ib
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.examen_ib.model.Cocinero
 import com.example.examen_ib.repository.CocineroRepository
@@ -21,9 +26,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
 
         //Inicializacion de la base de datos
-        BDD.tablaCocinero = CocineroRepository(this)
+        BDD.bddAplicacion = CocineroRepository(this)
 
-        cocineros = BDD.tablaCocinero!!.obtenerCocineros()
+        cocineros = BDD.bddAplicacion!!.obtenerCocineros()
 
         if(cocineros.size != 0){
             //listado de cocineros
@@ -41,8 +46,6 @@ class MainActivity : AppCompatActivity() {
         }else{
             mostrarSnackbar("No existen cocineros")
         }
-
-        //TODO por ahora la lista de cocineros esta vacia, crear la actividad para creacion de usuarios, crear un usuario y volver a probar el funcionamiento del listado
 
         val btnCrearCocinero = findViewById<Button>(R.id.id_btn_crear)
         btnCrearCocinero
@@ -96,4 +99,95 @@ class MainActivity : AppCompatActivity() {
             )
             .show()
     }
+
+    //creacion de las opciones de accion (editar, eliminar, ver comidas)
+    var posicionItemSeleccionado = 0
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ){
+        super.onCreateContextMenu(menu, v, menuInfo)
+        //llenamos las opciones del menu
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        //obtener el id del ArrayListSeleccionado
+        val info = menuInfo as AdapterView.AdapterContextMenuInfo
+        val posicion = info.position
+        posicionItemSeleccionado = posicion
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.mi_editar ->{
+                val codigoUnico = cocineros.get(posicionItemSeleccionado).codigoUnico
+                val nombre_Cocinero = cocineros.get(posicionItemSeleccionado).nombre + " " + cocineros.get(posicionItemSeleccionado).apellido
+                mostrarSnackbar(codigoUnico)
+                val extras = Bundle()
+                extras.putString("codigoUnico", codigoUnico)
+                extras.putString("nombreCocinero", nombre_Cocinero)
+                irEdicionCocinero(Cocinero_edicion::class.java, extras)
+                return true
+            }
+            R.id.mi_eliminar_comida -> {
+                mostrarSnackbar(cocineros.get(posicionItemSeleccionado).codigoUnico)
+                val result: Boolean = abrirDialogo(cocineros.get(posicionItemSeleccionado).codigoUnico)
+                if(result) true else
+
+                return false
+            }
+            R.id.mi_ver_comida -> {
+                val codigoUnico = cocineros.get(posicionItemSeleccionado).codigoUnico
+                val nombre_Cocinero = cocineros.get(posicionItemSeleccionado).nombre + " " + cocineros.get(posicionItemSeleccionado).apellido
+                mostrarSnackbar(codigoUnico)
+                val extras = Bundle()
+                extras.putString("codigoUnico", codigoUnico)
+                extras.putString("nombreCocinero", nombre_Cocinero)
+                irEdicionCocinero(Comida_Listado::class.java, extras)
+                return true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    fun abrirDialogo(codigoUnico: String): Boolean {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Desea eliminar a este cocinero?")
+
+        var eliminacionExitosa = false
+
+        builder.setPositiveButton(
+            "Aceptar",
+            DialogInterface.OnClickListener { dialog, which ->
+
+                val respuesta = BDD.bddAplicacion?.eliminarCocineroPorCodigoUnico(codigoUnico)
+
+                if (respuesta == true) {
+                    mostrarSnackbar("Cocinero eliminado exitosamente")
+                    eliminacionExitosa = true
+                } else {
+                    mostrarSnackbar("No se pudo eliminar al cocinero")
+                    eliminacionExitosa = false
+                }
+            }
+        )
+        builder.setNegativeButton(
+            "Cancelar",
+            null
+        )
+
+        val dialogo = builder.create()
+        dialogo.show()
+
+        return eliminacionExitosa
+    }
+
+    fun irEdicionCocinero(clase: Class<*>, datosExtras: Bundle? = null) {
+        val intent = Intent(this, clase)
+        if (datosExtras != null) {
+            intent.putExtras(datosExtras)
+        }
+        startActivity(intent)
+    }
+
 }

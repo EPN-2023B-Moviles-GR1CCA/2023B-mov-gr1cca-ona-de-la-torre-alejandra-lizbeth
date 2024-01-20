@@ -203,7 +203,7 @@
       android:layout_height="@dimen/txt_height"
       android:ems="10"
       android:hint="@string/hint_fecha"
-      android:inputType="date"
+      android:inputType="text"
       android:textColor="@color/texts_inputs_cocineros"
       android:textColorHint="@color/texts_inputs_cocineros"
       android:textSize="13sp"
