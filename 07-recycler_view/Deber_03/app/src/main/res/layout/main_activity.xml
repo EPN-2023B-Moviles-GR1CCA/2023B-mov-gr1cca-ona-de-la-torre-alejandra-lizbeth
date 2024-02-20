@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="0dp"
+        android:layout_height="107dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/appTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5sp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:menu="@menu/menu_top_app"></androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:tabMode="scrollable">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_para_ti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Para ti" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_lista_exitos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lista de éxitos" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_infantiles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Infantiles" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_premium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Premium" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_categoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Categorías" />
+        </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_1"
+        android:layout_width="0dp"
+        android:layout_height="230dp"
+        android:background="#212121"
+        android:scrollbars="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/appbar"
+        app:layout_constraintStart_toStartOf="@+id/appbar"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_2"
+        android:layout_width="413dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/bnv_menu"
+        app:layout_constraintEnd_toEndOf="@+id/rv_1"
+        app:layout_constraintStart_toStartOf="@+id/rv_1"
+        app:layout_constraintTop_toBottomOf="@+id/rv_1" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bnv_menu"
+        android:layout_width="412dp"
+        android:layout_height="69dp"
+        android:background="#302E2E"
+        app:itemIconTint="@color/cardview_light_background"
+        app:itemRippleColor="#00BCD4"
+        app:itemTextAppearanceActiveBoldEnabled="true"
+        app:itemTextColor="@color/cardview_light_background"
+        app:labelVisibilityMode="auto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_bottom_app">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
