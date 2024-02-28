@@ -3,60 +3,81 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="390dp"
-    android:layout_height="230dp"
+    android:layout_height="250dp"
     android:layout_margin="2dp"
+    app:cardBackgroundColor="#212121"
     app:cardCornerRadius="15dp"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="#212121">
+    app:cardUseCompatPadding="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="221dp">
-
-        <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="48dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="12dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/vix_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/imgView_image"
-            app:layout_constraintTop_toBottomOf="@+id/imgView_image" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="ViX: TV, Deportes y Notic..."
-            app:layout_constraintEnd_toStartOf="@+id/btn_instalar"
-            app:layout_constraintHorizontal_bias="0.538"
-            app:layout_constraintStart_toEndOf="@+id/iv_icon"
-            app:layout_constraintTop_toBottomOf="@+id/imgView_image"/>
+        android:layout_height="250dp">
 
         <ImageView
             android:id="@+id/imgView_image"
             android:layout_width="wrap_content"
-            android:layout_height="156dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ea_sports"
+            android:src="@drawable/i2_rv1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_descripcion"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="112dp"
-            android:background="#9F595959"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="-5dp"
+            android:layout_marginBottom="44dp"
+            android:background="#C197152E"
             android:gravity="center"
+            android:text="Encuentra tu pareja ideal con estas ardientes tramas románticas"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/imgView_image"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/imgView_image"
+            app:layout_constraintTop_toTopOf="@+id/imgView_image" />
+
+        <TextView
+            android:id="@+id/tv_descripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="-2dp"
+            android:layout_marginBottom="14dp"
+            android:background="#92FFC107"
+            android:gravity="center"
+            android:text="Ofertas y novedades por la celebración"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/imgView_image"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/imgView_image"
+            app:layout_constraintTop_toTopOf="@+id/imgView_image" />
+
+        <TextView
+            android:id="@+id/tv_state"
+            android:layout_width="157dp"
+            android:layout_height="41dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="-3dp"
+            android:layout_marginTop="112dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="209dp"
+            android:background="#97152E"
+            android:gravity="center"
+            android:text="Ocurriendo ahora"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -65,39 +86,5 @@
             app:layout_constraintStart_toStartOf="@+id/imgView_image"
             app:layout_constraintTop_toTopOf="@+id/imgView_image" />
 
-        <TextView
-            android:id="@+id/tv_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="TelevisaUnivision...."
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="@+id/tv_title"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tv_title"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
-        <Button
-            android:id="@+id/btn_instalar"
-            android:layout_width="80dp"
-            android:layout_height="33dp"
-            android:layout_marginTop="12dp"
-            android:text="Instalar"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.89"
-            app:layout_constraintStart_toEndOf="@+id/iv_icon"
-            app:layout_constraintTop_toBottomOf="@+id/imgView_image" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Compras desde la app"
-            android:textSize="8sp"
-            app:layout_constraintEnd_toEndOf="@+id/btn_instalar"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/btn_instalar"
-            app:layout_constraintTop_toBottomOf="@+id/btn_instalar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>
