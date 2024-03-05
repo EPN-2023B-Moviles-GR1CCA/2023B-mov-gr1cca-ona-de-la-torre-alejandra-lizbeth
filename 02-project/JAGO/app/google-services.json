@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "224125665984",
+    "project_id": "jago-aaacc",
+    "storage_bucket": "jago-aaacc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224125665984:android:cc655ef1d1c1d246cfa325",
+        "android_client_info": {
+          "package_name": "com.example.jago"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB0ivaUxbHHSviwxiUaGRqVerWVEipu8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

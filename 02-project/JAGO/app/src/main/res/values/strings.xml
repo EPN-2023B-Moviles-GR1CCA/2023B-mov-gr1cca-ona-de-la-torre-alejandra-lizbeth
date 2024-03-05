@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">JAGO</string>
+
+    <string name="image_contentDescription">image</string>
+    <string name="sign_in">Iniciar Sesión</string>
+    <string name="sign_up">Registrarse</string>
+
+    <!--START-->
+    <string name="sign_up_description_text">Ingresa los siguientes datos para crear una cuenta de GFP - JAGO</string>
+    <string name="name">Nombres</string>
+    <string name="last_name">Apellidos</string>
+    <string name="cellphone">Teléfono</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+
 </resources>
