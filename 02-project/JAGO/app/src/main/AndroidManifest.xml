@@ -13,6 +13,38 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".categorias.Categoria_creacion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar"/>
+        <activity
+            android:name=".categorias.Categoria_gestion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar"/>
+        <activity
+            android:name=".cuentas.Cuenta_creacion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar" />
+        <activity
+            android:name=".cuentas.Cuenta_gestion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar" />
+        <activity
+            android:name=".transacciones.Gasto_creacion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar" />
+        <activity
+            android:name=".transacciones.Ingreso_creacion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar" />
+        <activity
+            android:name=".transacciones.Accion_transaccion"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar" />
+        <activity
+            android:name=".transacciones.Inicio_transacciones"
+            android:exported="false"
+            android:theme="@style/Theme.JAGO.NoActionBar" />
+        <activity
             android:name=".OlvidarContraActivity"
             android:exported="false"
             android:screenOrientation="portrait"

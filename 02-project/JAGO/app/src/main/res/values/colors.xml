@@ -11,4 +11,10 @@
     <color name="primary_text_color">#363A43</color>
     <color name="secondary_text_color">#7A8089</color>
 
+    <color name="turquesa">#80CBC4</color>
+    <color name="background_topbar">#E0F2F1</color>
+    <color name="green_text">#00C853</color>
+    <color name="red_text">#D50000</color>
+    <color name="background_card">#E0F2F1</color>
+
 </resources>

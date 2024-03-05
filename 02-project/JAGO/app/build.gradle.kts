@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.jago"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.jago"
@@ -67,6 +67,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:21.0.6")
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

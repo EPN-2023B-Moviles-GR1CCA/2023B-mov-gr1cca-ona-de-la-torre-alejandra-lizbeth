@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".transacciones.Gasto_creacion">
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="283dp"
+        android:layout_height="147dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.123"
+        app:srcCompat="@drawable/logo_icon" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="325dp"
+        android:layout_height="350dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_logo"
+        app:layout_constraintVertical_bias="0.362"
+        app:cardBackgroundColor="@color/background_card"
+        app:cardCornerRadius="15dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_gasto_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gasto"
+                android:textColor="@color/red_text"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.055" />
+
+            <EditText
+                android:id="@+id/monto_gasto"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="40dp"
+                android:ems="10"
+                android:hint="Ingresa el monto"
+                android:inputType="numberDecimal"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/et_fecha_gasto"
+                app:layout_constraintTop_toBottomOf="@+id/tv_gasto_titulo" />
+
+            <Spinner
+                android:id="@+id/sp_cuenta_gasto"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/img_cuenta_gasto"
+                app:layout_constraintTop_toBottomOf="@+id/monto_gasto" />
+
+            <Spinner
+                android:id="@+id/sp_categoria_gasto"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/img_categoria_gasto"
+                app:layout_constraintTop_toBottomOf="@+id/sp_cuenta_gasto" />
+
+            <EditText
+                android:id="@+id/et_descripcion_gasto"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="40dp"
+                android:ems="10"
+                android:hint="Ingresa una descripción"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/img_descripcion_gasto"
+                app:layout_constraintTop_toBottomOf="@+id/sp_categoria_gasto" />
+
+            <EditText
+                android:id="@+id/et_fecha_gasto"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="40dp"
+                android:ems="10"
+                android:hint="yyyy/MM/dd"
+                android:inputType="date"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/img_fecha_gasto"
+                app:layout_constraintTop_toBottomOf="@+id/et_descripcion_gasto" />
+
+            <ImageView
+                android:id="@+id/img_down_gasto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="28dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.248"
+                app:srcCompat="@drawable/down_arrow" />
+
+            <ImageView
+                android:id="@+id/img_cuenta_gasto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="28dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.38"
+                app:srcCompat="@drawable/cuenta_icon" />
+
+            <ImageView
+                android:id="@+id/img_categoria_gasto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="28dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.51"
+                app:srcCompat="@drawable/categorias_icon" />
+
+            <ImageView
+                android:id="@+id/img_descripcion_gasto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="28dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.63"
+                app:srcCompat="@drawable/descripcion_icon" />
+
+            <ImageView
+                android:id="@+id/img_fecha_gasto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="28dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.76"
+                app:srcCompat="@drawable/date_icon" />
+
+            <Button
+                android:id="@+id/btn_cancelar_gasto"
+                android:layout_width="100dp"
+                android:layout_height="37dp"
+                android:layout_marginStart="76dp"
+                android:backgroundTint="@color/background_card"
+                android:text="Cancelar"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_guardar_gasto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_fecha_gasto"
+                app:layout_constraintVertical_bias="0.484" />
+
+            <Button
+                android:id="@+id/btn_guardar_gasto"
+                android:layout_width="100dp"
+                android:layout_height="37dp"
+                android:layout_marginEnd="40dp"
+                android:text="Guardar"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_fecha_gasto" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

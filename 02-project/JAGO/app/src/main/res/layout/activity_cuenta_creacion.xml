@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".cuentas.Cuenta_creacion">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="331dp"
+        android:layout_height="403dp"
+        app:cardBackgroundColor="@color/background_card"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.43">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_cuenta_titulo_creacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cuenta"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.055" />
+
+            <EditText
+                android:id="@+id/nombre_cuenta_creacion"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="Nombre de la cuenta"
+                android:textColorHint="#9E9E9E"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_cuenta_titulo_creacion"
+                app:layout_constraintHorizontal_bias="0.315"
+                app:layout_constraintStart_toStartOf="@+id/tv_cuenta_titulo_creacion"
+                app:layout_constraintTop_toBottomOf="@+id/tv_cuenta_titulo_creacion" />
+
+            <EditText
+                android:id="@+id/et_descripcion_cuenta_creacion"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Ingresa una descripción"
+                android:textColorHint="#9E9E9E"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/nombre_cuenta_creacion"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/nombre_cuenta_creacion"
+                app:layout_constraintTop_toBottomOf="@+id/nombre_cuenta_creacion" />
+
+            <EditText
+                android:id="@+id/et_fecha_cuenta_creacion"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Saldo"
+                android:inputType="number|numberDecimal"
+                android:textColorHint="#9E9E9E"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_icono_emogi"
+                app:layout_constraintStart_toStartOf="@+id/tv_icono_emogi"
+                app:layout_constraintTop_toBottomOf="@+id/tv_icono_emogi" />
+
+            <ImageView
+                android:id="@+id/img_bill_creacion"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/nombre_cuenta_creacion"
+                app:layout_constraintEnd_toStartOf="@+id/nombre_cuenta_creacion"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/nombre_cuenta_creacion"
+                app:srcCompat="@drawable/bill_icon" />
+
+            <ImageView
+                android:id="@+id/img_cuenta"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/et_descripcion_cuenta_creacion"
+                app:layout_constraintEnd_toStartOf="@+id/et_descripcion_cuenta_creacion"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/et_descripcion_cuenta_creacion"
+                app:srcCompat="@drawable/descripcion_icon" />
+
+            <ImageView
+                android:id="@+id/img_emogi"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_icono_emogi"
+                app:layout_constraintEnd_toStartOf="@+id/tv_icono_emogi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_icono_emogi"
+                app:srcCompat="@drawable/emogi_icon" />
+
+            <ImageView
+                android:id="@+id/img_saldo_creacion_cuenta"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/et_fecha_cuenta_creacion"
+                app:layout_constraintEnd_toStartOf="@+id/et_fecha_cuenta_creacion"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/et_fecha_cuenta_creacion"
+                app:srcCompat="@drawable/saldo_icon" />
+
+            <ImageView
+                android:id="@+id/img_limite_creacion"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@+id/limite_gasto_creacion_cuenta"
+                app:layout_constraintEnd_toStartOf="@+id/limite_gasto_creacion_cuenta"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/limite_gasto_creacion_cuenta"
+                app:srcCompat="@drawable/alert_icon" />
+
+            <Button
+                android:id="@+id/btn_cancelar_creacion_cuenta"
+                android:layout_width="100dp"
+                android:layout_height="37dp"
+                android:layout_marginStart="76dp"
+                android:backgroundTint="@color/background_card"
+                android:text="Cancelar"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_guardar_creacion_cuenta"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_fecha_cuenta_creacion"
+                app:layout_constraintVertical_bias="0.892" />
+
+            <Button
+                android:id="@+id/btn_guardar_creacion_cuenta"
+                android:layout_width="100dp"
+                android:layout_height="37dp"
+                android:layout_marginEnd="40dp"
+                android:text="Guardar"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_fecha_cuenta_creacion"
+                app:layout_constraintVertical_bias="0.892" />
+
+            <EditText
+                android:id="@+id/limite_gasto_creacion_cuenta"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Límite de gasto"
+                android:inputType="numberDecimal"
+                android:textColorHint="#9E9E9E"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/et_fecha_cuenta_creacion"
+                app:layout_constraintStart_toStartOf="@+id/et_fecha_cuenta_creacion"
+                app:layout_constraintTop_toBottomOf="@+id/et_fecha_cuenta_creacion" />
+
+            <TextView
+                android:id="@+id/tv_icono_emogi"
+                android:layout_width="220dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="10dp"
+                android:hint="Icono"
+                android:textColorHint="#9E9E9E"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/et_descripcion_cuenta_creacion"
+                app:layout_constraintStart_toStartOf="@+id/et_descripcion_cuenta_creacion"
+                app:layout_constraintTop_toBottomOf="@+id/et_descripcion_cuenta_creacion" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

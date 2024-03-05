@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
+import com.example.jago.transacciones.Inicio_transacciones
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
@@ -61,7 +62,7 @@ class IniciarSesionActivity : AppCompatActivity() {
                     if(task.isSuccessful){
                         Log.d("Inicio Sesión", "Inicio de sesión exitoso")
                         val user = auth.currentUser
-                        irActividad(BaseActivity::class.java)
+                        irActividad(Inicio_transacciones::class.java)
                     }else{
                         Log.w("Inicio Sesión","Ocurrió un error al intentar iniciar sesión", task.exception)
                         Toast.makeText(baseContext, "Autenticación falló",Toast.LENGTH_SHORT).show()

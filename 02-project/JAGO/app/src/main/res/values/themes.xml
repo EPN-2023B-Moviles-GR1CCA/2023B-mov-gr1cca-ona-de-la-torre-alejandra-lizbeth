@@ -3,7 +3,7 @@
 
     <style name="Theme.JAGO" parent="android:Theme.Material.Light.NoActionBar"></style>
 
-    <style name="Theme.JAGO.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.JAGO.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".categorias.Categoria_gestion">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_topbar"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/background_topbar"
+            app:title="Categorías"
+            app:menu="@menu/topbar_menu_categorias">
+
+        </com.google.android.material.appbar.MaterialToolbar>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@color/background_topbar"
+            android:textAlignment="center"
+            app:tabGravity="center"
+            app:tabMode="scrollable">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_ingresos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ingresos" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_gastos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gastos" />
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ViewPager -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+    <!--<include layout="@layout/content_inicio_transacciones" />-->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_categoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="95dp"
+        app:backgroundTint="@color/turquesa"
+        app:layout_anchor="@id/nav_button_categoria"
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/more_icon"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_button_categoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#E0F2F1"
+        app:itemIconTint="@color/cardview_dark_background"
+        app:itemRippleColor="#00BFA5"
+        app:itemTextColor="@color/cardview_dark_background"
+        app:labelVisibilityMode="auto"
+        app:menu="@menu/bottom_nav_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

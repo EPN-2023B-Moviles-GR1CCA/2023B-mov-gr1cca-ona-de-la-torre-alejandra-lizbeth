@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mi_sort_cuentas"
+        android:icon="@drawable/sort_icon"
+        android:title="Ordenar elementos"
+        app:showAsAction="always" />
+</menu>

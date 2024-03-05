@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/action_transaction"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".transacciones.Accion_transaccion">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/turquesa"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.884"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.897"
+        app:srcCompat="@android:drawable/ic_delete"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <TextView
+        android:id="@+id/tv_gasto_agregar"
+        android:layout_width="142dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="24dp"
+        android:paddingTop="4dp"
+        android:text="Gasto"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.847"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_gasto_agregar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#E0F2F1"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_gasto_agregar"
+        app:layout_constraintEnd_toEndOf="@+id/tv_gasto_agregar"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="@+id/tv_gasto_agregar"
+        app:layout_constraintTop_toTopOf="@+id/tv_gasto_agregar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_gasto_agregar"
+        app:layout_constraintEnd_toEndOf="@+id/tv_gasto_agregar"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toStartOf="@+id/btn_gasto_agregar"
+        app:layout_constraintTop_toTopOf="@+id/btn_gasto_agregar"
+        app:srcCompat="@drawable/down_arrow" />
+
+    <TextView
+        android:id="@+id/tv_ingreso_agregar"
+        android:layout_width="160dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="4dp"
+        android:text="Ingreso"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_gasto_agregar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_ingreso_agregar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#E0F2F1"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ingreso_agregar"
+        app:layout_constraintEnd_toEndOf="@+id/tv_ingreso_agregar"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="@+id/tv_ingreso_agregar"
+        app:layout_constraintTop_toTopOf="@+id/tv_ingreso_agregar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_ingreso_agregar"
+        app:layout_constraintEnd_toEndOf="@+id/tv_ingreso_agregar"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toStartOf="@+id/btn_ingreso_agregar"
+        app:layout_constraintTop_toTopOf="@+id/btn_ingreso_agregar"
+        app:srcCompat="@drawable/up_arrow" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="385dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginBottom="5dp"
+    app:cardBackgroundColor="@color/background_card"
+    app:cardCornerRadius="15dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_ic_cuenta_item"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignTop="@+id/tv_title_cuenta_item"
+            android:layout_alignBottom="@+id/tv_descripcion_item_cuenta"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="-50dp"
+            android:layout_marginBottom="20dp"
+            android:layout_toStartOf="@+id/tv_title_cuenta_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/cash_icon" />
+
+        <TextView
+            android:id="@+id/tv_title_cuenta_item"
+            android:layout_width="291dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="67dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="100dp"
+            android:text="Nombre de la cuenta"
+            android:textAlignment="textStart"
+            android:textColor="#757575"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/img_ic_cuenta_item"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/img_ic_cuenta_item"
+            app:layout_constraintTop_toTopOf="@+id/img_ic_cuenta_item" />
+
+        <TextView
+            android:id="@+id/tv_descripcion_item_cuenta"
+            android:layout_width="292dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="66dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="48dp"
+            android:text="Ofertas y novedades por la celebración"
+            android:textAlignment="textStart"
+            android:textColor="#9E9E9E"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/img_ic_cuenta_item"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/img_ic_cuenta_item"
+            app:layout_constraintTop_toTopOf="@+id/img_ic_cuenta_item" />
+
+        <View
+            android:id="@+id/divider_item_cuenta"
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_alignStart="@+id/tv_descripcion_item_cuenta"
+            android:layout_alignBottom="@+id/tv_descripcion_item_cuenta"
+            android:layout_marginStart="-55dp"
+            android:layout_marginBottom="-9dp"
+            android:background="#009688" />
+
+        <TextView
+            android:id="@+id/tv_sd_cuenta_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/divider_item_cuenta"
+            android:layout_alignBottom="@+id/divider_item_cuenta"
+            android:layout_marginStart="1dp"
+            android:layout_marginBottom="-32dp"
+            android:gravity="center"
+            android:text="Saldo:"
+            android:textColor="#616161"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_sd_total_cuenta_item"
+            android:layout_width="239dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider_item_cuenta"
+            android:layout_alignEnd="@+id/divider_item_cuenta"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="7dp"
+            android:text="$65,00"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
