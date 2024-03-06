@@ -30,5 +30,21 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
+    <string-array name="items_cuenta">
+        <item>--Seleccionar--</item>
+        <item>Pichincha</item>
+        <item>Efectivo</item>
+    </string-array>
+    <string-array name="items_categoria_ingresos">
+        <item>--Seleccionar--</item>
+        <item>Sueldo</item>
+        <item>Préstamo</item>
+        <item>Regalo</item>
+    </string-array>
+    <string-array name="items_categoria_gastos">
+        <item>--Seleccionar--</item>
+        <item>Medicina</item>
+        <item>Comida</item>
+        <item>Transporte</item>
+    </string-array>
 </resources>

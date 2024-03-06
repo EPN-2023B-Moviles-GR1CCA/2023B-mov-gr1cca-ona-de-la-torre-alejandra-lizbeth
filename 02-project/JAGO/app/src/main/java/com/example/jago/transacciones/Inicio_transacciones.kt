@@ -1,10 +1,12 @@
 package com.example.jago.transacciones
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.jago.R
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -14,6 +16,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.jago.categorias.Categoria_gestion
 import com.example.jago.cuentas.Cuenta_gestion
+import com.example.jago.firebase.FireStore
+import com.example.jago.models.Gasto
+import com.example.jago.models.Ingreso
 //import com.example.jago.categorias.Categoria_gestion
 //import com.example.jago.cuentas.Cuenta_gestion
 //import com.example.jago.databinding.ActivityInicioTransaccionesBinding
@@ -74,7 +79,9 @@ class Inicio_transacciones : AppCompatActivity() {
                 val intent = Intent(this, Cuenta_gestion::class.java);
                 startActivity(intent);
             }
+        obtenerSaldoTotal()
     }
+
     fun onTopAppBar(topAppBar: MaterialToolbar){
 
         topAppBar.setOnMenuItemClickListener { menuItem ->
@@ -110,4 +117,47 @@ class Inicio_transacciones : AppCompatActivity() {
             }
             }
         }
+
+    fun obtenerIngresos(callback: (Double) -> Unit) {
+        var saldoTotalIngresos = 0.0
+        FireStore().obtenerTodosLosIngresos().addOnSuccessListener { querySnapshot ->
+            for (document in querySnapshot.documents) {
+                val ingreso = document.toObject(Ingreso::class.java)
+                if (ingreso != null) {
+                    saldoTotalIngresos += ingreso.monto
+                    findViewById<TextView>(R.id.tv_saldo_ingresos).text = "$" + saldoTotalIngresos.toString()
+                }
+            }
+            callback(saldoTotalIngresos)
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error al obtener los ingresos: $exception")
+            callback(0.0) // Devolver 0.0 en caso de error
+        }
+    }
+
+    fun obtenerGastos(callback: (Double) -> Unit) {
+        var saldoTotalGastos = 0.0
+        FireStore().obtenerTodosLosGastos().addOnSuccessListener { querySnapshot ->
+            for (document in querySnapshot.documents) {
+                val gasto = document.toObject(Gasto::class.java)
+                if (gasto != null) {
+                    saldoTotalGastos += gasto.monto
+                    findViewById<TextView>(R.id.tv_saldo_gastos).text = "$" + saldoTotalGastos.toString()
+                }
+            }
+            callback(saldoTotalGastos)
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error al obtener los gastos: $exception")
+            callback(0.0) // Devolver 0.0 en caso de error
+        }
+    }
+
+    fun obtenerSaldoTotal() {
+        obtenerIngresos { saldoIngresos ->
+            obtenerGastos { saldoGastos ->
+                val saldoTotal = saldoIngresos - saldoGastos
+                findViewById<TextView>(R.id.tv_saldo_visible).text = "$$saldoTotal"
+            }
+        }
+    }
 }
